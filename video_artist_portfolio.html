@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vj.t0n | Portfolio Audiovisual</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Monospace & Retro Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#050505',
+                            card: '#0a0a0a',
+                            border: '#1f1f1f',
+                            orange: '#ff5500',
+                            orangeGlow: '#ff550088',
+                            dim: '#888888',
+                            bright: '#f0f0f0'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['"Share Tech Mono"', 'Courier New', 'monospace'],
+                        crt: ['"VT323"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080808;
+            border-left: 1px solid #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff5500;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff7722;
+            box-shadow: 0 0 10px #ff5500;
+        }
+
+        /* CRT Scanlines Overlay */
+        .crt-scanlines {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.35) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+        }
+
+        /* Glow Effects */
+        .text-glow {
+            text-shadow: 0 0 8px rgba(255, 85, 0, 0.6);
+        }
+        .text-glow-white {
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+        }
+        .box-glow {
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.2);
+        }
+
+        /* Glitch Animation on Hover */
+        .glitch-hover:hover {
+            animation: glitch-anim 0.2s infinite;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        /* Dropdown Animation */
+        .dropdown-menu {
+            transition: all 0.2s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+        }
+        .dropdown-container:hover .dropdown-menu,
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Panel Fade Effect */
+        .tab-panel {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .tab-panel.active {
+            display: flex;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="h-full bg-cyber-bg text-cyber-bright font-mono selection:bg-cyber-orange selection:text-black flex flex-col justify-between overflow-hidden relative">
+
+    <!-- CRT Overlay Layer (Toggleable) -->
+    <div id="crt-overlay" class="crt-scanlines fixed inset-0 z-50 transition-opacity duration-300"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full bg-black/90 border-b border-cyber-border z-40 px-4 py-3 md:px-8 flex flex-wrap justify-between items-center sticky top-0 backdrop-blur-sm">
+        <!-- Logo & Home Button -->
+        <div class="flex items-center space-x-3">
+            <button onclick="switchTab('about')" class="flex items-center space-x-2 text-cyber-bright hover:text-cyber-orange transition-colors group">
+                <span class="text-xl group-hover:scale-110 transition-transform">🏠</span>
+                <span class="text-xl font-bold tracking-widest text-glow-white">vj.t0n</span>
+            </button>
+            <span class="text-xs text-cyber-dim hidden sm:inline-block border-l border-cyber-border pl-3">AUDIOVISUAL ARTIST</span>
+        </div>
+
+        <!-- Right Side Nav Items & CRT Toggle -->
+        <div class="flex items-center space-x-2 md:space-x-6 text-sm">
+            <!-- Navigation Links -->
+            <nav class="flex items-center space-x-1 sm:space-x-4">
+                <button onclick="switchTab('about')" id="nav-about" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
+                    <span class="text-cyber-orange">♦</span>
+                    <span>ABOUT ME</span>
+                </button>
+                <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
+                    <span class="text-cyber-orange">♦</span>
+                    <span>CONTACT</span>
+                </button>
+                <button onclick="switchTab('links')" id="nav-links" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
+                    <span class="text-cyber-orange">♦</span>
+                    <span>LINKS</span>
+                </button>
+
+                <!-- WORKS Dropdown Navigation -->
+                <div class="relative dropdown-container inline-block">
+                    <button onclick="switchTab('works')" id="nav-works" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
+                        <span class="text-cyber-orange">♦</span>
+                        <span>WORKS</span>
+                        <span class="text-xs text-cyber-orange ml-0.5">▼</span>
+                    </button>
+                    <!-- Dropdown Content -->
+                    <div class="dropdown-menu absolute right-0 mt-2 w-56 bg-cyber-card border border-cyber-border shadow-2xl py-2 z-50">
+                        <div class="px-3 py-1 text-[10px] text-cyber-dim border-b border-cyber-border tracking-wider">FILTRAR CATEGORÍA</div>
+                        <button onclick="filterCategory('ALL')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> TODOS LOS TRABAJOS</span>
+                        </button>
+                        <button onclick="filterCategory('DISEÑO DE PANTALLAS')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> DISEÑO DE PANTALLAS</span>
+                        </button>
+                        <button onclick="filterCategory('MOTION GRAPHICS')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> MOTION GRAPHICS</span>
+                        </button>
+                        <button onclick="filterCategory('OPERACIÓN DE VIDEO EN VIVO')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> OPERACIÓN EN VIVO</span>
+                        </button>
+                        <button onclick="filterCategory('VIDEOINSTALACIÓN')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> VIDEOINSTALACIÓN</span>
+                        </button>
+                        <button onclick="filterCategory('SETS A/V')" class="w-full text-left px-4 py-2 text-xs hover:bg-cyber-orange hover:text-black transition-colors flex justify-between">
+                            <span>> SETS A/V</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- CRT Toggle Button -->
+            <button onclick="toggleCRT()" id="crt-btn" class="border border-cyber-border px-2 py-1 text-xs text-cyber-orange hover:border-cyber-orange transition-all font-crt tracking-widest hidden md:inline-block">
+                [CRT: ON]
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Application View (Container for 3 Islands / Split Panels) -->
+    <main class="flex-grow w-full max-w-7xl mx-auto p-4 md:p-8 flex items-center justify-center overflow-hidden">
+
+        <!-- ==================== 1. ABOUT ME TAB ==================== -->
+        <section id="tab-about" class="tab-panel active w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
+            <!-- Left Panel: Portrait Image with Hover Glitch -->
+            <div class="w-full lg:w-1/2 flex justify-center items-center h-[350px] lg:h-[500px] relative group">
+                <div class="w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex items-center justify-center group-hover:border-cyber-orange transition-colors box-glow">
+                    <!-- Dynamic Canvas Glitch Backdrop -->
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" alt="Tomás Serio (vj.t0n)" class="w-full h-full object-cover grayscale contrast-125 glitch-hover transition-all duration-300 group-hover:grayscale-0">
+                    <!-- Overlay Badge -->
+                    <div class="absolute bottom-3 left-3 bg-black/80 border border-cyber-orange px-3 py-1 text-xs text-cyber-orange font-mono">
+                        SRC: PORTRAIT_2024.RAW
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Biography with Language Switcher -->
+            <div class="w-full lg:w-1/2 h-[400px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto relative">
+                <!-- Header Control inside Panel -->
+                <div class="flex justify-between items-center border-b border-cyber-border pb-3 mb-4">
+                    <span class="text-xs text-cyber-orange font-bold tracking-widest">// BIOGRAPHY_DATA</span>
+                    <!-- Language Selector Toggle -->
+                    <div class="flex space-x-2 text-xs">
+                        <span class="text-cyber-dim">LANG:</span>
+                        <button onclick="setLanguage('es')" id="lang-es" class="font-bold text-cyber-orange border-b border-cyber-orange px-1">ES</button>
+                        <span class="text-cyber-dim">|</span>
+                        <button onclick="setLanguage('en')" id="lang-en" class="font-bold text-cyber-dim hover:text-white px-1">EN</button>
+                    </div>
+                </div>
+
+                <!-- Text Content Body (Swappable Language) -->
+                <div id="about-text-es" class="space-y-4 text-sm md:text-base leading-relaxed text-gray-300">
+                    <p>
+                        <strong class="text-white">Tomás Serio</strong> (<span class="text-cyber-orange font-bold">aka vj.t0n</span>) es un Videoartista nacido en Buenos Aires en el año 1995. Licenciado en <span class="text-white border-b border-cyber-orange">Artes Multimediales</span> por la <strong class="text-white">Universidad Nacional de las Artes (UNA)</strong>.
+                    </p>
+                    <p>
+                        Su trabajo se expande a través de diferentes medios y lenguajes tales como espectáculos en vivo, música, televisión, cine, teatro y publicidad, utilizando la <span class="text-white">imagen en movimiento</span> como principal materia discursiva.
+                    </p>
+                    <p>
+                        El eje central de su producción parte de la constante exploración de técnicas analógicas y digitales audiovisuales (<strong class="text-cyber-orange">VJing</strong>, procesamiento de imagen en tiempo real, <strong class="text-cyber-orange">videoinstalación</strong> y <strong class="text-cyber-orange">motion graphics</strong>).
+                    </p>
+                </div>
+
+                <div id="about-text-en" class="space-y-4 text-sm md:text-base leading-relaxed text-gray-300 hidden">
+                    <p>
+                        <strong class="text-white">Tomás Serio</strong> (<span class="text-cyber-orange font-bold">aka vj.t0n</span>) is a Video Artist born in Buenos Aires in 1995. He holds a degree in <span class="text-white border-b border-cyber-orange">Multimedia Arts</span> from the <strong class="text-white">National University of the Arts (UNA)</strong>.
+                    </p>
+                    <p>
+                        His work spans various media and performance formats including live shows, music, television, film, theater, and advertising, using the <span class="text-white">moving image</span> as his primary discursive material.
+                    </p>
+                    <p>
+                        The core of his production stems from exploring analog and digital audiovisual techniques (<strong class="text-cyber-orange">VJing</strong>, real-time image processing, <strong class="text-cyber-orange">video installation</strong>, and <strong class="text-cyber-orange">motion graphics</strong>).
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-cyber-border mt-auto flex justify-between text-xs text-cyber-dim">
+                    <span>STATUS: ONLINE</span>
+                    <span>LOCATION: BUENOS AIRES, AR</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 2. CONTACT TAB ==================== -->
+        <section id="tab-contact" class="tab-panel w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
+            <!-- Left Panel: CRT TV Stack Graphic -->
+            <div class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px]">
+                <div class="w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex items-center justify-center box-glow">
+                    <!-- Interactive Visual TV Stack Simulation -->
+                    <canvas id="tv-stack-canvas" class="w-full h-full object-cover"></canvas>
+                    <div class="absolute top-3 left-3 bg-black/80 border border-cyber-border px-2 py-1 text-[10px] text-cyber-orange">
+                        SIGNAL: CRT_ARRAY_ACTIVE
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Direct Info & Interactive Terminal Form -->
+            <div class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
+                <div>
+                    <div class="text-xs text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-3 mb-6">
+                        // DIRECT_COMMUNICATION
+                    </div>
+
+                    <!-- Copyable Info Blocks -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center justify-between p-3 border border-cyber-border bg-black hover:border-cyber-orange transition-colors">
+                            <div>
+                                <span class="text-[10px] text-cyber-dim block">EMAIL</span>
+                                <span id="email-text" class="text-sm md:text-base font-bold text-white">tomaserio.multimedia@gmail.com</span>
+                            </div>
+                            <button onclick="copyToClipboard('tomaserio.multimedia@gmail.com', 'EMAIL')" class="px-3 py-1 bg-cyber-border text-xs text-cyber-orange hover:bg-cyber-orange hover:text-black transition-colors border border-cyber-orange">
+                                [COPIAR]
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 border border-cyber-border bg-black hover:border-cyber-orange transition-colors">
+                            <div>
+                                <span class="text-[10px] text-cyber-dim block">PHONE / WHATSAPP</span>
+                                <span id="phone-text" class="text-sm md:text-base font-bold text-white">+54 9 2323 524648</span>
+                            </div>
+                            <button onclick="copyToClipboard('+54 9 2323 524648', 'TELÉFONO')" class="px-3 py-1 bg-cyber-border text-xs text-cyber-orange hover:bg-cyber-orange hover:text-black transition-colors border border-cyber-orange">
+                                [COPIAR]
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CLI Interactive Terminal Form -->
+                    <div class="border border-cyber-border bg-black p-4 font-mono text-xs">
+                        <div class="text-cyber-orange mb-2">// CONSOLA DE MENSAJE DIRECTO</div>
+                        <form id="terminal-form" onsubmit="handleTerminalSubmit(event)" class="space-y-3">
+                            <div>
+                                <label class="text-cyber-dim block mb-1">INPUT: NOMBRE ></label>
+                                <input type="text" id="cli-name" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange">
+                            </div>
+                            <div>
+                                <label class="text-cyber-dim block mb-1">INPUT: MENSAJE ></label>
+                                <textarea id="cli-message" rows="2" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-2 bg-cyber-orange text-black font-bold uppercase hover:bg-white transition-colors">
+                                [ TRANSMITIR MENSAJE_ ]
+                            </button>
+                        </form>
+                        <div id="cli-output" class="mt-3 text-cyber-orange hidden font-crt text-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 3. LINKS TAB ==================== -->
+        <section id="tab-links" class="tab-panel w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
+            <!-- Left Panel: Dynamic Visual Preview Panel -->
+            <div class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px]">
+                <div class="w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex flex-col justify-between p-6 box-glow">
+                    <div id="preview-title" class="text-sm font-bold text-cyber-orange border-b border-cyber-border pb-2">
+                        // NETWORK_DIRECTORIES
+                    </div>
+                    
+                    <!-- Dynamic Hover Preview Card Display -->
+                    <div id="preview-card" class="my-auto text-center p-6 border border-cyber-border bg-black/60 relative">
+                        <div class="text-4xl mb-2">🌐</div>
+                        <h4 id="preview-name" class="text-lg font-bold text-white mb-1">Ecosistema Digital</h4>
+                        <p id="preview-desc" class="text-xs text-cyber-dim">Pasa el cursor sobre cualquiera de las plataformas para inspeccionar detalles del nodo.</p>
+                    </div>
+
+                    <div class="text-[10px] text-cyber-dim text-right">
+                        NODE_STATUS: ACTIVE
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Categorized Links List -->
+            <div class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
+                <div class="space-y-6">
+                    <div class="text-xs text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2">
+                        // SOCIAL_&_OFFICIAL_LINKS
+                    </div>
+
+                    <!-- Category 1: Social Media -->
+                    <div>
+                        <h3 class="text-xs text-cyber-dim font-bold uppercase mb-3">// SOCIAL MEDIA</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                            <a href="https://instagram.com/vj.t0n" target="_blank" onmouseenter="updateLinkPreview('Instagram', '@vj.t0n - Visuals, live clips y detrás de escena de shows.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>Instagram @vj.t0n</span>
+                            </a>
+                            <a href="https://x.com/vjt0n" target="_blank" onmouseenter="updateLinkPreview('X / Twitter', '@vjt0n - Pensamientos, arte digital y experimentos.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>X @vjt0n</span>
+                            </a>
+                            <a href="https://tiktok.com/@vj.t0n" target="_blank" onmouseenter="updateLinkPreview('TikTok', '@vj.t0n - Loops de video cortos y experimentos VJ.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>TikTok @vj.t0n</span>
+                            </a>
+                            <a href="https://behance.net/tomasserio" target="_blank" onmouseenter="updateLinkPreview('Behance', 'Portfolio extendido de proyectos multimediales.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>Behance /tomasserio</span>
+                            </a>
+                            <a href="https://youtube.com/@vj.t0n" target="_blank" onmouseenter="updateLinkPreview('YouTube', 'Registros de shows en vivo y reels en alta definición.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>YouTube @vj.t0n</span>
+                            </a>
+                            <a href="https://vimeo.com/vjt0n" target="_blank" onmouseenter="updateLinkPreview('Vimeo', 'Portafolio audiovisual cinematográfico.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>Vimeo @vjt0n</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Category 2: NFT -->
+                    <div>
+                        <h3 class="text-xs text-cyber-dim font-bold uppercase mb-3">// WEB3 & NFT PLATFORMS</h3>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <a href="#" onmouseenter="updateLinkPreview('OBJKT', 'Colecciones de Criptoarte y Tokenización audiovisual en Tezos.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>OBJKT</span>
+                            </a>
+                            <a href="#" onmouseenter="updateLinkPreview('Foundation', 'Obras de videoarte digital de edición limitada.')" class="link-item flex items-center space-x-2 p-2 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-all">
+                                <span class="text-cyber-orange">♦</span>
+                                <span>Foundation</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Category 3: Visual Pack -->
+                    <div>
+                        <h3 class="text-xs text-cyber-dim font-bold uppercase mb-3">// RESOURCES & PACKS</h3>
+                        <a href="https://www.luminaspace.com/segments" target="_blank" onmouseenter="updateLinkPreview('Segments Visual Pack', 'Paquete exclusivo de loops de video analógicos para VJs y creadores.')" class="link-item flex items-center space-x-2 p-3 border border-cyber-orange bg-cyber-orange/10 hover:bg-cyber-orange hover:text-black transition-all group">
+                            <span class="text-cyber-orange group-hover:text-black">♦</span>
+                            <span class="font-bold">Segments Visual Pack (luminaspace.com/segments)</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 4. WORKS TAB ==================== -->
+        <section id="tab-works" class="tab-panel w-full h-full flex-col lg:flex-row gap-6 items-center justify-center">
+            
+            <!-- Left Island: Project Media Canvas Simulator -->
+            <div class="w-full lg:w-2/3 h-[380px] lg:h-[500px] border border-cyber-border bg-cyber-card p-4 flex flex-col justify-between relative box-glow">
+                
+                <!-- Project Header Bar -->
+                <div class="flex justify-between items-center border-b border-cyber-border pb-3 z-10">
+                    <div>
+                        <span id="project-category-badge" class="text-[10px] bg-cyber-orange text-black font-bold px-2 py-0.5 uppercase tracking-wider">
+                            DISEÑO DE PANTALLAS
+                        </span>
+                        <h2 id="project-title" class="text-xl md:text-2xl font-bold text-white mt-1">BIZARRAP COACHELLA</h2>
+                    </div>
+                    <div class="text-right text-xs text-cyber-dim">
+                        <span id="project-date">Marzo 2024</span>
+                    </div>
+                </div>
+
+                <!-- Interactive VJ Screen Canvas Loop Simulator -->
+                <div class="w-full flex-grow my-3 bg-black border border-cyber-border relative overflow-hidden flex items-center justify-center">
+                    <canvas id="vj-screen-canvas" class="w-full h-full object-cover"></canvas>
+                    <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 border border-cyber-border text-[10px] text-cyber-orange font-crt">
+                        [SIMULACIÓN_REPRODUCTOR_LIVE_VJ]
+                    </div>
+                </div>
+
+                <!-- Footer Info & Navigation Controls -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2 border-t border-cyber-border text-xs">
+                    <div class="text-cyber-dim">
+                        ESTUDIO: <span id="project-studio" class="text-white font-bold">Maxi Vecco Studio</span>
+                    </div>
+                    
+                    <!-- Prev / Next Project Buttons -->
+                    <div class="flex space-x-2">
+                        <button onclick="prevProject()" class="px-3 py-1.5 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-colors">
+                            ← ANTERIOR
+                        </button>
+                        <button onclick="nextProject()" class="px-3 py-1.5 border border-cyber-border bg-black hover:border-cyber-orange hover:text-cyber-orange transition-colors">
+                            SIGUIENTE →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Island: Category Filter & Project List -->
+            <div class="w-full lg:w-1/3 h-[250px] lg:h-[500px] border border-cyber-border bg-cyber-card p-4 flex flex-col justify-between overflow-y-auto">
+                <div>
+                    <div class="text-xs text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2 mb-3">
+                        // CATÁLOGO DE PROYECTOS
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex flex-wrap gap-1 mb-4">
+                        <button onclick="filterCategory('ALL')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">TODOS</button>
+                        <button onclick="filterCategory('DISEÑO DE PANTALLAS')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">PANTALLAS</button>
+                        <button onclick="filterCategory('MOTION GRAPHICS')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">MOTION</button>
+                        <button onclick="filterCategory('OPERACIÓN DE VIDEO EN VIVO')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">LIVE VJ</button>
+                        <button onclick="filterCategory('VIDEOINSTALACIÓN')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">INSTALACIÓN</button>
+                        <button onclick="filterCategory('SETS A/V')" class="cat-pill text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">SETS A/V</button>
+                    </div>
+
+                    <!-- Project Selection List -->
+                    <div id="project-list-container" class="space-y-1.5 text-xs">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Console Toast Notification Banner -->
+    <div id="toast-notification" class="fixed bottom-4 right-4 bg-black border border-cyber-orange text-cyber-orange px-4 py-2 text-xs font-mono shadow-2xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <span id="toast-text">> COPIADO AL PORTAPAPELES</span>
+    </div>
+
+    <!-- JavaScript Application Core -->
+    <script>
+        // Projects Dataset
+        const projectsData = [
+            {
+                id: 1,
+                title: "BIZARRAP COACHELLA",
+                category: "DISEÑO DE PANTALLAS",
+                date: "Marzo 2024",
+                studio: "Maxi Vecco Studio",
+                role: "Diseño, Composición y Animación",
+                canvasMode: "grid"
+            },
+            {
+                id: 2,
+                title: "DUKI SANTIAGO BERNABÉU",
+                category: "DISEÑO DE PANTALLAS",
+                date: "Junio 2024",
+                studio: "Stadium Visuals",
+                role: "Operación y Contenido de Pantallas",
+                canvasMode: "waves"
+            },
+            {
+                id: 3,
+                title: "SEGMENTS VISUAL PACK",
+                category: "MOTION GRAPHICS",
+                date: "Enero 2024",
+                studio: "Lumina Space",
+                role: "Creación de Loops Analógicos 4K",
+                canvasMode: "glitch"
+            },
+            {
+                id: 4,
+                title: "MUTEK AR LIVE VJ SET",
+                category: "OPERACIÓN DE VIDEO EN VIVO",
+                date: "Noviembre 2023",
+                studio: "MUTEK Festival",
+                role: "Mezcla de Video Analógico en Tiempo Real",
+                canvasMode: "noise"
+            },
+            {
+                id: 5,
+                title: "MONITORES CRT ANÁLOGOS",
+                category: "VIDEOINSTALACIÓN",
+                date: "Agosto 2023",
+                studio: "Galería UNA",
+                role: "Diseño de Instalación de 12 Pantallas CRT",
+                canvasMode: "crt_stack"
+            },
+            {
+                id: 6,
+                title: "SYNTHWAVE EXPERIMENTAL A/V",
+                category: "SETS A/V",
+                date: "Diciembre 2023",
+                studio: "Independiente",
+                role: "Performance A/V con Sintetizadores de Hardware",
+                canvasMode: "spectrum"
+            }
+        ];
+
+        // Global State Variables
+        let currentTab = 'about';
+        let currentLang = 'es';
+        let crtEnabled = true;
+        let selectedCategory = 'ALL';
+        let currentProjectIndex = 0;
+        let filteredProjects = [...projectsData];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Initial render
+            renderProjectList();
+            loadProject(0);
+            initTVCanvas();
+            initVJCanvas();
+
+            // Highlight initial tab nav
+            updateNavState('about');
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            
+            const targetPanel = document.getElementById(`tab-${tabId}`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+
+            updateNavState(tabId);
+        }
+
+        function updateNavState(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-cyber-orange', 'text-glow'));
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.add('text-cyber-orange', 'text-glow');
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const esBlock = document.getElementById('about-text-es');
+            const enBlock = document.getElementById('about-text-en');
+            const btnEs = document.getElementById('lang-es');
+            const btnEn = document.getElementById('lang-en');
+
+            if (lang === 'es') {
+                esBlock.classList.remove('hidden');
+                enBlock.classList.add('hidden');
+                btnEs.className = "font-bold text-cyber-orange border-b border-cyber-orange px-1";
+                btnEn.className = "font-bold text-cyber-dim hover:text-white px-1";
+            } else {
+                esBlock.classList.add('hidden');
+                enBlock.classList.remove('hidden');
+                btnEn.className = "font-bold text-cyber-orange border-b border-cyber-orange px-1";
+                btnEs.className = "font-bold text-cyber-dim hover:text-white px-1";
+            }
+        }
+
+        function toggleCRT() {
+            crtEnabled = !crtEnabled;
+            const crtOverlay = document.getElementById('crt-overlay');
+            const crtBtn = document.getElementById('crt-btn');
+
+            if (crtEnabled) {
+                crtOverlay.style.opacity = '1';
+                crtBtn.innerText = '[CRT: ON]';
+                crtBtn.classList.add('text-cyber-orange');
+            } else {
+                crtOverlay.style.opacity = '0';
+                crtBtn.innerText = '[CRT: OFF]';
+                crtBtn.classList.remove('text-cyber-orange');
+            }
+        }
+
+        function copyToClipboard(text, label) {
+            // Standard copy technique
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast(`> ${label} COPIADO AL PORTAPAPELES`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const toastText = document.getElementById('toast-text');
+            toastText.innerText = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        function handleTerminalSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('cli-name').value;
+            const message = document.getElementById('cli-message').value;
+            const output = document.getElementById('cli-output');
+
+            output.classList.remove('hidden');
+            output.innerHTML = `> PROCESANDO TRANSMISIÓN...<br>> MENSAJE DE "${name.toUpperCase()}" RECIBIDO [200 OK]`;
+
+            document.getElementById('cli-name').value = '';
+            document.getElementById('cli-message').value = '';
+
+            setTimeout(() => {
+                output.innerHTML += `<br>> GRACIAS POR CONTACTAR. TE RESPONDERÉ A LA BREVEDAD.`;
+            }, 1000);
+        }
+
+        function updateLinkPreview(title, description) {
+            document.getElementById('preview-name').innerText = title;
+            document.getElementById('preview-desc').innerText = description;
+        }
+
+        function filterCategory(category) {
+            selectedCategory = category;
+            switchTab('works');
+
+            if (category === 'ALL') {
+                filteredProjects = [...projectsData];
+            } else {
+                filteredProjects = projectsData.filter(p => p.category === category);
+            }
+
+            renderProjectList();
+            if (filteredProjects.length > 0) {
+                loadProject(0);
+            }
+        }
+
+        function renderProjectList() {
+            const container = document.getElementById('project-list-container');
+            container.innerHTML = '';
+
+            filteredProjects.forEach((proj, idx) => {
+                const btn = document.createElement('button');
+                const isActive = idx === currentProjectIndex;
+
+                btn.className = `w-full text-left p-2 border transition-all flex items-center justify-between ${
+                    isActive 
+                        ? 'border-cyber-orange bg-cyber-orange/10 text-white font-bold' 
+                        : 'border-cyber-border bg-black text-cyber-dim hover:text-white'
+                }`;
+
+                btn.onclick = () => loadProject(idx);
+                btn.innerHTML = `
+                    <span class="truncate">${proj.id}. ${proj.title}</span>
+                    <span class="text-[10px] text-cyber-orange">${isActive ? '►' : ''}</span>
+                `;
+
+                container.appendChild(btn);
+            });
+        }
+
+        function loadProject(index) {
+            if (filteredProjects.length === 0) return;
+            currentProjectIndex = index;
+
+            const proj = filteredProjects[index];
+            document.getElementById('project-title').innerText = proj.title;
+            document.getElementById('project-category-badge').innerText = proj.category;
+            document.getElementById('project-date').innerText = proj.date;
+            document.getElementById('project-studio').innerText = proj.studio;
+
+            renderProjectList();
+        }
+
+        function nextProject() {
+            if (filteredProjects.length === 0) return;
+            currentProjectIndex = (currentProjectIndex + 1) % filteredProjects.length;
+            loadProject(currentProjectIndex);
+        }
+
+        function prevProject() {
+            if (filteredProjects.length === 0) return;
+            currentProjectIndex = (currentProjectIndex - 1 + filteredProjects.length) % filteredProjects.length;
+            loadProject(currentProjectIndex);
+        }
+
+        // TV Stack Noise Canvas Simulation
+        function initTVCanvas() {
+            const canvas = document.getElementById('tv-stack-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function drawTV() {
+                if (currentTab === 'contact') {
+                    ctx.fillStyle = '#050505';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Draw procedural TV monitor stack with noise
+                    const cols = 3;
+                    const rows = 3;
+                    const w = canvas.width / cols;
+                    const h = canvas.height / rows;
+
+                    for (let i = 0; i < cols; i++) {
+                        for (let j = 0; j < rows; j++) {
+                            const x = i * w + 5;
+                            const y = j * h + 5;
+                            const tvW = w - 10;
+                            const tvH = h - 10;
+
+                            ctx.strokeStyle = '#333';
+                            ctx.strokeRect(x, y, tvW, tvH);
+
+                            // Static Noise inside TV
+                            const imgData = ctx.createImageData(tvW, tvH);
+                            for (let p = 0; p < imgData.data.length; p += 4) {
+                                const noise = Math.random() > 0.5 ? 255 : 0;
+                                const isBlue = (i + j) % 2 === 0;
+                                imgData.data[p] = isBlue ? 0 : noise;       // R
+                                imgData.data[p+1] = isBlue ? noise/2 : noise; // G
+                                imgData.data[p+2] = isBlue ? noise : noise;  // B
+                                imgData.data[p+3] = 200;                    // Alpha
+                            }
+                            ctx.putImageData(imgData, x, y);
+                        }
+                    }
+                }
+                requestAnimationFrame(drawTV);
+            }
+            drawTV();
+        }
+
+        // Main VJ Interactive Visual Canvas Simulator
+        function initVJCanvas() {
+            const canvas = document.getElementById('vj-screen-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let angle = 0;
+
+            function renderVJLoop() {
+                if (currentTab === 'works') {
+                    ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    const mode = filteredProjects[currentProjectIndex]?.canvasMode || 'grid';
+                    const time = Date.now() * 0.002;
+                    const cx = canvas.width / 2;
+                    const cy = canvas.height / 2;
+
+                    ctx.strokeStyle = '#ff5500';
+                    ctx.lineWidth = 1.5;
+
+                    if (mode === 'grid') {
+                        // Futuristic grid animation
+                        for (let i = -canvas.width; i < canvas.width; i += 30) {
+                            ctx.beginPath();
+                            ctx.moveTo(cx + i, cy);
+                            ctx.lineTo(cx + i * 4, canvas.height);
+                            ctx.stroke();
+                        }
+                        const horizon = cy + Math.sin(time) * 20;
+                        ctx.beginPath();
+                        ctx.arc(cx, horizon - 40, 50, 0, Math.PI * 2);
+                        ctx.stroke();
+                    } else if (mode === 'waves') {
+                        // Oscillating synthwave lines
+                        ctx.beginPath();
+                        for (let x = 0; x < canvas.width; x += 10) {
+                            const y = cy + Math.sin(x * 0.02 + time * 2) * 40;
+                            if (x === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.stroke();
+                    } else if (mode === 'glitch') {
+                        // Glitch box patterns
+                        for (let i = 0; i < 5; i++) {
+                            const gx = Math.random() * canvas.width;
+                            const gy = Math.random() * canvas.height;
+                            const gw = Math.random() * 80 + 20;
+                            const gh = Math.random() * 30 + 10;
+                            ctx.strokeStyle = Math.random() > 0.5 ? '#ff5500' : '#ffffff';
+                            ctx.strokeRect(gx, gy, gw, gh);
+                        }
+                    } else {
+                        // Default synth geometry
+                        angle += 0.02;
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.rotate(angle);
+                        ctx.strokeRect(-60, -60, 120, 120);
+                        ctx.rotate(-angle * 2);
+                        ctx.strokeRect(-40, -40, 80, 80);
+                        ctx.restore();
+                    }
+                }
+                requestAnimationFrame(renderVJLoop);
+            }
+            renderVJLoop();
+        }
+    </script>
+</body>
+</html>
