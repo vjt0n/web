@@ -1,0 +1,772 @@
+/* ==========================================================================
+  VJ.T0N PORTFOLIO - CYBERPUNK STYLESHEET
+   Diseño Responsive y Vertical (Mobile-First)
+   
+   CONFIGURACIÓN DE BREAKPOINTS (DISPOSITIVOS VERTICALES):
+   - Ultra Compact Mobile: <= 360px (iPhone SE, Galaxy A series pequeños)
+   - Standard Mobile Vertical: 361px - 480px (iPhone 13/14/15/16, Pixel 7/8, Galaxy S23/S24)
+   - Phablets / Foldables Verticales: 481px - 768px (iPad Mini, Galaxy Fold cerrado, tablets pequeñas)
+   - Tablet / Desktop Horizontal: >= 769px
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIABLES DE DISEÑO & PALETA DE COLORES
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-dark: #050505;
+  --bg-card: #0d0d0d;
+  --bg-card-hover: #141414;
+  --text-bright: #ffffff;
+  --text-main: #d0d0d0;
+  --text-dim: #707070;
+  --accent-orange: #ff5500;
+  --accent-orange-glow: rgba(255, 85, 0, 0.4);
+  --border-color: #222222;
+  --font-mono: 'Share Tech Mono', 'Courier New', Courier, monospace;
+
+  /* Tamaños táctiles seguros para móvil (UX) */
+  --touch-target-min: 44px;
+  
+  /* Altura dinámica de la barra de navegación en móvil */
+  --header-height-mobile: 60px;
+  --header-height-desktop: 70px;
+}
+
+/* Modo Claro Override */
+body[data-theme="light"] {
+  --bg-dark: #f2efe9;
+  --bg-card: #f8f5f0;
+  --bg-card-hover: #efe8df;
+  --text-bright: #0a0a0a;
+  --text-main: #1d1d1d;
+  --text-dim: #5c5c5c;
+  --accent-orange: #d84800;
+  --accent-orange-glow: rgba(216, 72, 0, 0.22);
+  --border-color: #d3c7b8;
+}
+
+body[data-theme="light"],
+body[data-theme="light"] * {
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+body[data-theme="light"] {
+  background-color: var(--bg-dark) !important;
+  color: var(--text-main) !important;
+}
+
+body[data-theme="light"] header,
+body[data-theme="light"] [class*="bg-black"],
+body[data-theme="light"] [class*="bg-cyber-card"],
+body[data-theme="light"] [class*="bg-cyber-bg"],
+body[data-theme="light"] .dropdown-menu,
+body[data-theme="light"] .project-form-panel,
+body[data-theme="light"] .cli-terminal,
+body[data-theme="light"] .link-card,
+body[data-theme="light"] .bg-cyber-border {
+  background-color: var(--bg-card) !important;
+}
+
+body[data-theme="light"] [class*="border-cyber-border"],
+body[data-theme="light"] [class*="border-cyber-orange"],
+body[data-theme="light"] .project-form-panel input,
+body[data-theme="light"] .project-form-panel textarea,
+body[data-theme="light"] .project-form-panel select,
+body[data-theme="light"] .dropdown-menu {
+  border-color: var(--border-color) !important;
+}
+
+body[data-theme="light"] [class*="text-cyber-bright"],
+body[data-theme="light"] [class*="text-white"],
+body[data-theme="light"] [class*="text-gray-300"],
+body[data-theme="light"] [class*="text-cyber-dim"],
+body[data-theme="light"] .nav-link,
+body[data-theme="light"] .dropdown-item,
+body[data-theme="light"] .link-card,
+body[data-theme="light"] .cli-input,
+body[data-theme="light"] .lang-toggle-btn,
+body[data-theme="light"] .text-black {
+  color: var(--text-bright) !important;
+}
+
+body[data-theme="light"] [class*="text-cyber-dim"] {
+  color: var(--text-dim) !important;
+}
+
+body[data-theme="light"] [class*="text-cyber-orange"],
+body[data-theme="light"] .nav-link:hover,
+body[data-theme="light"] .nav-link.active,
+body[data-theme="light"] .nav-diamond,
+body[data-theme="light"] .dropdown-item:hover {
+  color: var(--accent-orange) !important;
+}
+
+body[data-theme="light"] [class*="bg-cyber-orange"],
+body[data-theme="light"] [class*="bg-cyber-orange/10"] {
+  background-color: var(--accent-orange) !important;
+}
+
+body[data-theme="light"] .header-nav,
+body[data-theme="light"] header {
+  background-color: rgba(255, 255, 255, 0.86) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESETS Y ESTRUCTURA BASE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Corrección de altura real para navegadores móviles (Safari iOS / Chrome Android) */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   3. EFECTOS CYBERPUNK & GLITCH
+   -------------------------------------------------------------------------- */
+/* Efectos de Resplandor Neón */
+.text-glow {
+  text-shadow: 0 0 8px var(--accent-orange-glow);
+}
+
+.box-glow {
+  box-shadow: 0 0 12px var(--accent-orange-glow);
+}
+
+/* Foto de retrato con filtro naranja por defecto y restauración del color al hover */
+
+/* --------------------------------------------------------------------------
+   4. PERSONALIZACIÓN DE BARRAS DE DESPLAZAMIENTO (SCROLLBARS)
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+  border-left: 1px solid var(--border-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-orange);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff7722;
+}
+
+/* --------------------------------------------------------------------------
+   5. NAVEGACIÓN Y CABECERA (ADAPTATIVA)
+   -------------------------------------------------------------------------- */
+.header-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--header-height-mobile);
+  background-color: var(--bg-dark);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text-bright);
+  text-decoration: none;
+}
+
+/* Menú de navegación principal */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+}
+
+.nav-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  min-height: var(--touch-target-min);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent-orange);
+}
+
+.nav-diamond {
+  color: var(--accent-orange);
+  font-size: 10px;
+}
+
+/* Menú desplegable (Dropdown de WORKS) */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  min-width: 200px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  z-index: 1100;
+}
+
+.dropdown-container:hover .dropdown-menu,
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-menu details[open] .screens-menu-chevron {
+  transform: rotate(180deg);
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 11px;
+  text-transform: uppercase;
+  display: block;
+  min-height: var(--touch-target-min);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--accent-orange);
+}
+
+/* --------------------------------------------------------------------------
+   6. CONTENEDOR PRINCIPAL Y "LAS 3 ISLAS" (ESTRUCTURA DE PANELES)
+   -------------------------------------------------------------------------- */
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 16px;
+}
+
+/* Paneles que cambian dinámicamente con JavaScript */
+.tab-panel {
+  display: none;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.tab-panel.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* Disposición de 2 Columnas para Desktop / Tablet Ancha */
+.island-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  min-height: calc(100vh - var(--header-height-desktop) - 40px);
+}
+
+.island-media {
+  flex: 1;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+}
+
+.island-content {
+  flex: 1;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(100vh - var(--header-height-desktop) - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   7. COMPONENTES ESPECÍFICOS DE SECCIONES
+   -------------------------------------------------------------------------- */
+/* Botón selector de idioma ES/EN */
+.lang-toggle-btn {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--accent-orange);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 12px;
+  cursor: pointer;
+  min-height: var(--touch-target-min);
+}
+
+/* Grilla de enlaces (LINKS) */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.link-card {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  color: var(--text-bright);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch-target-min);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.link-card:hover {
+  border-color: var(--accent-orange);
+  background-color: var(--bg-card-hover);
+}
+
+/* Reproductor de video dentro de WORKS */
+.project-media-layer {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background: #050505;
+  padding: 12px;
+}
+
+.project-media-layer-full-bleed {
+  padding: 0;
+}
+
+.project-media-layer.visible {
+  display: block;
+}
+
+.project-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.project-media-grid-scrollable {
+  overflow-y: auto;
+  align-content: start;
+  scrollbar-color: var(--accent-orange) #0a0a0a;
+  scrollbar-width: thin;
+}
+
+.project-media-grid-vertical {
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: max-content;
+  height: auto;
+  max-height: 100%;
+  overflow-y: auto;
+  align-content: start;
+  scrollbar-color: var(--accent-orange) #0a0a0a;
+  scrollbar-width: thin;
+}
+
+.project-media-grid-pairs {
+  grid-auto-rows: max-content;
+  height: auto;
+  max-height: 100%;
+}
+
+.project-media-layer .project-media-grid-pairs img {
+  height: auto;
+  object-fit: contain;
+}
+
+.project-media-layer-full-bleed .project-media-grid-vertical {
+  gap: 0;
+}
+
+.project-media-layer-full-bleed .project-media-grid-pairs {
+  gap: 0;
+}
+
+.project-media-more-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 8px;
+  width: min(100%, 180px);
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.project-media-more-link:hover {
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.project-video-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-height: 220px;
+  background: #0a0a0a;
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  box-shadow: 0 0 10px rgba(255, 85, 0, 0.12);
+}
+
+.project-youtube-compact-link {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+  min-height: 72px;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  background: #0a0a0a;
+  color: #fff;
+  text-decoration: none;
+}
+
+.project-youtube-compact-link:hover {
+  border-color: var(--accent-orange);
+  background: rgba(255, 85, 0, 0.08);
+}
+
+.project-media-layer .project-youtube-compact-link img {
+  width: 112px;
+  height: 63px;
+  object-fit: cover;
+}
+
+.project-youtube-compact-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.project-youtube-compact-copy strong {
+  color: var(--accent-orange);
+  text-transform: uppercase;
+}
+
+.project-youtube-compact-copy span {
+  color: var(--text-dim);
+}
+
+.project-youtube-compact-arrow {
+  color: var(--accent-orange);
+  font-size: 18px;
+}
+
+.project-video-frame {
+  position: relative;
+  flex: 1;
+  min-height: 150px;
+  border: 1px solid var(--border-color);
+  background: #000;
+  overflow: hidden;
+}
+
+.youtube-player-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  border: 0;
+  display: block;
+  background: #000;
+}
+
+.project-video-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 2px;
+  border-top: 1px solid var(--border-color);
+}
+
+.video-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--accent-orange);
+  background: rgba(255, 85, 0, 0.08);
+  color: var(--accent-orange);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.video-control:hover {
+  background: var(--accent-orange);
+  color: #000;
+  box-shadow: 0 0 12px rgba(255, 85, 0, 0.5);
+}
+
+.project-media-layer img,
+.project-media-layer video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.project-media-grid-vertical img {
+  height: auto;
+  object-fit: contain;
+}
+
+/* Terminal / Formulario CLI */
+.cli-terminal {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  font-family: var(--font-mono);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cli-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  padding: 8px;
+  width: 100%;
+  outline: none;
+}
+
+.cli-input:focus {
+  border-color: var(--accent-orange);
+}
+
+/* ==========================================================================
+   8. MEDIA QUERIES PARA DISPOSITIVOS MÓVILES Y ORIENTACIÓN VERTICAL
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   A. TABLETS EN PORTRAIT Y PHABLETS (Ancho <= 768px)
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 768px), screen and (orientation: portrait) {
+  
+  .header-nav {
+    height: var(--header-height-mobile);
+    padding: 0 12px;
+  }
+
+  /* Transformación de la disposición de "3 Islas" a formato apilado vertical */
+  .island-layout {
+    flex-direction: column;
+    min-height: auto;
+    gap: 16px;
+  }
+
+  .island-media {
+    width: 100%;
+    min-height: 250px;
+    max-height: 350px;
+  }
+
+  .island-content {
+    width: 100%;
+    max-height: none; /* Permite el scroll natural de la página en móvil */
+    padding: 16px;
+  }
+
+  /* Ajuste de tipografía general para pantallas verticales */
+  body {
+    font-size: 13px;
+  }
+
+  h1, .text-xl {
+    font-size: 18px;
+  }
+
+  h2, .text-lg {
+    font-size: 15px;
+  }
+
+  .links-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   B. SMARTPHONES ESTÁNDAR VERTICAL (Ancho <= 480px)
+   Dispositivos objetivo: iPhone 12/13/14/15/16, Pixel 6/7/8, Galaxy S21/S22/S23
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 480px) {
+
+  .app-container {
+    padding: 8px;
+    gap: 12px;
+  }
+
+  /* Menú de Navegación Compacto para Pulgares */
+  .nav-menu {
+    gap: 4px;
+  }
+
+  .nav-link {
+    font-size: 11px;
+    padding: 6px 4px;
+  }
+
+  .nav-diamond {
+    font-size: 8px;
+  }
+
+  .nav-brand {
+    font-size: 14px;
+  }
+
+  /* Ajuste de visibilidad de textos largos en cabecera */
+  .nav-link span.link-text {
+    display: inline-block;
+  }
+
+  /* Ajuste del reproductor/media en móviles */
+  .island-media {
+    min-height: 200px;
+    max-height: 280px;
+  }
+
+  /* Formulario y controles con zona táctil optimizada */
+  .cli-terminal {
+    padding: 12px;
+  }
+
+  .cli-input,
+  .lang-toggle-btn {
+    min-height: var(--touch-target-min);
+    font-size: 12px;
+  }
+
+  .links-grid {
+    grid-template-columns: 1fr; /* Una sola columna vertical para listas de links */
+  }
+
+  .dropdown-menu {
+    position: fixed;
+    top: var(--header-height-mobile);
+    left: 8px;
+    right: 8px;
+    width: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   C. SMARTPHONES PEQUEÑOS / ULTRA COMPACTOS (Ancho <= 360px)
+   Dispositivos objetivo: iPhone SE (1ª y 2ª gen), Androids de gama de entrada
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 360px) {
+
+  .header-nav {
+    padding: 0 8px;
+  }
+
+  .nav-brand span {
+    display: none; /* Oculta texto secundario del logo si la pantalla es excesivamente estrecha */
+  }
+
+  .nav-link {
+    font-size: 10px;
+    gap: 2px;
+  }
+
+  .island-content {
+    padding: 12px;
+  }
+
+  .island-media {
+    min-height: 180px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   D. REGLAS DE ORIENTACIÓN PORTRAIT ESPECÍFICAS
+   -------------------------------------------------------------------------- */
+@media (orientation: portrait) {
+  /* Asegura que los videos y elementos Canvas mantengan la relación de aspecto vertical */
+  canvas.vj-canvas,
+  video.vj-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

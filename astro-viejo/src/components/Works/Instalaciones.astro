@@ -1,0 +1,49 @@
+---
+const proyectos = [
+  {
+    title: 'Mete Miedo (cine)',
+    venue: '2021',
+    production: 'Del Toro Films'
+  },
+  {
+    title: 'Cuerpo en Construcción',
+    venue: 'Espacio Caffarena, La Boca.',
+    production: 'Proyecto de Graduación U.N.A Artes Multimediales'
+  },
+  {
+    title: 'Estados Correlacionados',
+    venue: 'DVNE PARK, Buenos Aires 2023',
+    production: 'Newtro'
+  },
+  {
+    title: 'Newtro x S.E.E.D',
+    venue: 'Muito Radio, Buenos Aires 2024',
+    production: 'Newtro'
+  },
+  {
+    title: 'Newtro AV Jam',
+    venue: 'Artlab, Buenos Aires 2024',
+    production: 'Newtro'
+  }
+];
+---
+
+<div id="content-instalaciones" class="content-panel">
+    <section class="works-installation">
+        <div class="installation-list">
+            {proyectos.map((proyecto) => (
+                <article class="installation-item">
+                    <div class="installation-top-row">
+                        <h2>{proyecto.title}</h2>
+                        <p>{proyecto.venue}</p>
+                    </div>
+
+                    <div class="installation-production-row">
+                        <span>PRODUCCIÓN</span>
+                        <strong>{proyecto.production}</strong>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </section>
+</div>
