@@ -770,3 +770,54 @@ body {
     object-fit: cover;
   }
 }
+
+/* --------------------------------------------------------------------------
+   E. MONITORES 2K Y ESCRITORIOS DE ALTA RESOLUCIÓN
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 1920px) and (min-height: 1000px) {
+  html {
+    font-size: 18px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  main.max-w-7xl {
+    max-width: min(92vw, 2200px);
+    padding: clamp(2rem, 3vw, 4rem);
+  }
+
+  #tab-about,
+  #tab-contact,
+  #tab-links,
+  #tab-works {
+    gap: clamp(2rem, 3vw, 4rem);
+  }
+
+  #tab-about > div:first-child,
+  #tab-contact > div:first-child,
+  #tab-links > div:first-child {
+    height: min(68vh, 900px) !important;
+  }
+
+  #about-portrait-trigger,
+  #contact-portrait-trigger,
+  #tab-links > div:first-child > div {
+    max-width: 640px;
+  }
+
+  #tab-about > div:last-child,
+  #tab-contact > div:last-child,
+  #tab-links > div:last-child,
+  #tab-works > div:first-child,
+  #tab-works > div:last-child {
+    height: min(68vh, 900px) !important;
+  }
+
+  #tab-about > div:last-child,
+  #tab-contact > div:last-child,
+  #tab-links > div:last-child {
+    padding: clamp(1.5rem, 2vw, 3rem);
+  }
+}
