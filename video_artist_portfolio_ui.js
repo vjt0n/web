@@ -19,6 +19,35 @@ function updateNavState(tabId) {
     }
 }
 
+function toggleWorksMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('works-category-menu');
+    const button = document.getElementById('nav-works');
+    const isOpen = menu.classList.toggle('show');
+    button.setAttribute('aria-expanded', String(isOpen));
+}
+
+function closeWorksMenu() {
+    const menu = document.getElementById('works-category-menu');
+    const button = document.getElementById('nav-works');
+    if (!menu || !button) return;
+
+    menu.classList.remove('show');
+    button.setAttribute('aria-expanded', 'false');
+}
+
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('.dropdown-container')) {
+        closeWorksMenu();
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeWorksMenu();
+    }
+});
+
 function setLanguage(lang) {
     currentLang = lang;
     const esBlock = document.getElementById('about-text-es');
@@ -37,42 +66,6 @@ function setLanguage(lang) {
         btnEn.className = "font-bold text-cyber-orange border-b border-cyber-orange px-1";
         btnEs.className = "font-bold text-cyber-dim hover:text-white px-1";
     }
-}
-
-function applyThemeState(themeName) {
-    const root = document.body;
-    const isLight = themeName === 'light';
-    const header = document.querySelector('header');
-    const themeBtn = document.getElementById('theme-toggle-btn');
-
-    root.dataset.theme = themeName;
-    root.style.backgroundColor = isLight ? '#f2efe9' : '#050505';
-    root.style.color = isLight ? '#1d1d1d' : '#d0d0d0';
-
-    document.documentElement.style.setProperty('--bg-dark', isLight ? '#f2efe9' : '#050505');
-    document.documentElement.style.setProperty('--bg-card', isLight ? '#f8f5f0' : '#0d0d0d');
-    document.documentElement.style.setProperty('--text-bright', isLight ? '#0a0a0a' : '#ffffff');
-    document.documentElement.style.setProperty('--text-main', isLight ? '#1d1d1d' : '#d0d0d0');
-    document.documentElement.style.setProperty('--text-dim', isLight ? '#5c5c5c' : '#707070');
-    document.documentElement.style.setProperty('--accent-orange', isLight ? '#d84800' : '#ff5500');
-    document.documentElement.style.setProperty('--border-color', isLight ? '#d3c7b8' : '#222222');
-
-    if (header) {
-        header.style.backgroundColor = isLight ? 'rgba(255,255,255,0.86)' : 'rgba(0,0,0,0.9)';
-        header.style.borderColor = isLight ? '#d3c7b8' : '#1f1f1f';
-    }
-
-    if (themeBtn) {
-        themeBtn.innerHTML = isLight ? '☾' : '☀';
-        themeBtn.title = isLight ? 'Tema oscuro' : 'Tema claro';
-        themeBtn.setAttribute('aria-label', isLight ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro');
-    }
-}
-
-function toggleTheme() {
-    const root = document.body;
-    const isLight = root.dataset.theme === 'light';
-    applyThemeState(isLight ? 'dark' : 'light');
 }
 
 function copyToClipboard(text, label) {
@@ -100,26 +93,112 @@ function showToast(message) {
     }, 2500);
 }
 
-function handleTerminalSubmit(e) {
+async function handleTerminalSubmit(e) {
     e.preventDefault();
-    const name = document.getElementById('cli-name').value;
-    const message = document.getElementById('cli-message').value;
+    const form = e.currentTarget;
+    const nameInput = document.getElementById('cli-name');
+    const messageInput = document.getElementById('cli-message');
     const output = document.getElementById('cli-output');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
 
     output.classList.remove('hidden');
-    output.innerHTML = `> PROCESANDO TRANSMISIÓN...<br>> MENSAJE DE "${name.toUpperCase()}" RECIBIDO [200 OK]`;
+    if (!name || !message) {
+        output.textContent = '> ERROR: COMPLETÁ NOMBRE Y MENSAJE.';
+        return;
+    }
 
-    document.getElementById('cli-name').value = '';
-    document.getElementById('cli-message').value = '';
+    submitButton.disabled = true;
+    output.textContent = '> PROCESANDO TRANSMISIÓN...';
 
-    setTimeout(() => {
-        output.innerHTML += `<br>> GRACIAS POR CONTACTAR. TE RESPONDERÉ A LA BREVEDAD.`;
-    }, 1000);
+    try {
+        const response = await fetch('https://formsubmit.co/ajax/tomaserio.multimedia@gmail.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                message,
+                _subject: `CONTACT WEB ${name}`
+            })
+        });
+        const result = await response.json();
+
+        if (!response.ok || (result.success !== true && result.success !== 'true')) {
+            throw new Error(result.message || 'FormSubmit rechazó el envío.');
+        }
+
+        output.textContent = '> MENSAJE ENVIADO. GRACIAS POR CONTACTAR.\n> SI ES EL PRIMER ENVÍO, CONFIRMÁ EL EMAIL DE ACTIVACIÓN.';
+        form.reset();
+    } catch (error) {
+        console.error('No se pudo enviar el mensaje de contacto:', error);
+        output.textContent = '> ERROR: NO SE PUDO ENVIAR EL MENSAJE. INTENTÁ NUEVAMENTE.';
+    } finally {
+        submitButton.disabled = false;
+    }
 }
+
+function repositionNetworkDirectory(shouldReposition = true) {
+    const network = document.querySelector('.network-directory-dots');
+    if (!network) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (shouldReposition && reduceMotion) return;
+
+    const nodes = Array.from(network.querySelectorAll('span')).map((node) => {
+        const x = shouldReposition
+            ? 5 + Math.random() * 90
+            : parseFloat(getComputedStyle(node).getPropertyValue('--dot-x'));
+        const y = shouldReposition
+            ? 8 + Math.random() * 84
+            : parseFloat(getComputedStyle(node).getPropertyValue('--dot-y'));
+        if (shouldReposition) {
+            node.style.setProperty('--dot-x', `${x}%`);
+            node.style.setProperty('--dot-y', `${y}%`);
+        }
+        return { x, y };
+    });
+
+    const connections = network.querySelector('.network-directory-connections');
+    if (!connections) return;
+
+    const edges = new Set();
+    nodes.forEach((node, index) => {
+        const nearest = nodes
+            .map((candidate, candidateIndex) => ({
+                candidateIndex,
+                distance: Math.hypot(node.x - candidate.x, node.y - candidate.y)
+            }))
+            .filter(({ candidateIndex }) => candidateIndex !== index)
+            .sort((first, second) => first.distance - second.distance)
+            .slice(0, 2);
+
+        nearest.forEach(({ candidateIndex }) => {
+            edges.add(`${Math.min(index, candidateIndex)}-${Math.max(index, candidateIndex)}`);
+        });
+    });
+
+    const svgNamespace = 'http://www.w3.org/2000/svg';
+    const edgeElements = Array.from(edges, (edge) => {
+        const [startIndex, endIndex] = edge.split('-').map(Number);
+        const start = nodes[startIndex];
+        const end = nodes[endIndex];
+        const path = document.createElementNS(svgNamespace, 'path');
+        path.setAttribute('d', `M${start.x} ${start.y} L${end.x} ${end.y}`);
+        return path;
+    });
+
+    connections.replaceChildren(...edgeElements);
+}
+
+repositionNetworkDirectory(false);
 
 function updateLinkPreview(title, description, imageUrl = 'https://www.google.com/s2/favicons?sz=256&domain_url=www.google.com') {
     document.getElementById('preview-name').innerText = title;
     document.getElementById('preview-desc').innerText = description;
+    repositionNetworkDirectory();
 
     const previewImage = document.getElementById('preview-image');
     if (previewImage) {

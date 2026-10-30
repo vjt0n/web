@@ -12,19 +12,10 @@ window.addEventListener('DOMContentLoaded', () => {
     filteredProjects = projectsData.filter(project => matchesCategoryFilter(project.category, selectedCategory));
     currentProjectIndex = 0;
 
-    const toggleButton = document.getElementById('toggle-project-form');
-    const cancelButton = document.getElementById('cancel-project-form');
-    const projectForm = document.getElementById('project-form');
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const portraitTrigger = document.getElementById('about-portrait-trigger');
     const portraitOverlay = document.getElementById('about-portrait-overlay');
     const contactPortraitTrigger = document.getElementById('contact-portrait-trigger');
     const contactPortraitOverlay = document.getElementById('contact-portrait-overlay');
-
-    toggleButton.addEventListener('click', toggleProjectForm);
-    cancelButton.addEventListener('click', () => projectForm.classList.add('hidden'));
-    projectForm.addEventListener('submit', handleProjectFormSubmit);
-    themeToggleBtn.addEventListener('click', toggleTheme);
 
     const openPortraitOverlay = (overlay) => {
         overlay.classList.remove('hidden');
@@ -72,9 +63,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
-    applyThemeState('dark');
-    themeToggleBtn.innerHTML = '☀';
 
     attachProjectVideoControls();
 
