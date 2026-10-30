@@ -28,23 +28,9 @@ function matchesCategoryFilter(projectCategory, category) {
 }
 
 function updateCategoryButtonState() {
-    const screensCategory = document.getElementById('catalog-screens-category');
-    const isScreensCategory = selectedCategory === 'PANTALLAS / DISEÑO Y REALIZACIÓN' || selectedCategory === 'OPERACIÓN EN VIVO';
-    screensCategory.classList.toggle('border-cyber-orange', isScreensCategory);
-    screensCategory.classList.toggle('bg-cyber-orange/10', isScreensCategory);
-    screensCategory.classList.toggle('text-white', isScreensCategory);
-    screensCategory.classList.toggle('text-cyber-dim', !isScreensCategory);
-    screensCategory.classList.toggle('font-bold', isScreensCategory);
-    screensCategory.classList.toggle('shadow-[0_0_10px_rgba(255,85,0,0.18)]', isScreensCategory);
-
     document.querySelectorAll('.cat-pill').forEach(button => {
         const isActive = button.dataset.category === selectedCategory;
-        button.classList.toggle('border-cyber-orange', isActive);
-        button.classList.toggle('bg-cyber-orange/10', isActive);
-        button.classList.toggle('text-white', isActive);
-        button.classList.toggle('text-cyber-dim', !isActive);
-        button.classList.toggle('font-bold', isActive);
-        button.classList.toggle('shadow-[0_0_10px_rgba(255,85,0,0.18)]', isActive);
+        button.classList.toggle('active', isActive);
     });
 }
 

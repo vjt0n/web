@@ -1,0 +1,269 @@
+/* ==========================================================================
+   VJ.T0N PORTFOLIO - MOBILE & VERTICAL STYLESHEET (COMPLETO)
+   ========================================================================== */
+
+@media screen and (max-width: 768px), screen and (orientation: portrait) {
+
+  /* --------------------------------------------------------------------------
+     1. RESPIRO Y ANTI-SOLAPAMIENTO CON EL HEADER
+     -------------------------------------------------------------------------- */
+  html, body {
+    font-size: 13px;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  body {
+    justify-content: flex-start !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    flex-shrink: 0;
+    padding: 10px 14px !important;
+    height: auto !important;
+    min-height: 58px !important;
+    background-color: rgba(5, 5, 5, 0.98) !important;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  header nav {
+    gap: 4px !important;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  header nav button,
+  header .dropdown-container button {
+    font-size: 11px !important;
+    padding: 5px 8px !important;
+  }
+
+  .dropdown-menu {
+    position: fixed !important;
+    top: 60px !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  #nav-works .nav-works-chevron,
+  #works-category-menu {
+    display: none !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     2. ESTRUCTURA GENERAL DE LAS PESTAÑAS Y DESPLAZAMIENTO NATURAL
+     -------------------------------------------------------------------------- */
+  main {
+    flex: 0 0 auto !important;
+    padding: 12px 10px !important;
+    margin: 0 auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .tab-panel {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 18px !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    align-self: stretch !important;
+    min-width: 0 !important;
+  }
+
+  /* Mantener las columnas centradas y evitar que el overlay herede estilos de panel */
+  #about-portrait-panel,
+  #about-bio-panel,
+  #contact-portrait-panel,
+  #contact-form-panel,
+  #links-preview-panel,
+  #links-directory-panel {
+    width: 100% !important;
+    max-width: 600px !important;
+    flex: none !important;
+    margin: 0 auto !important;
+  }
+
+  #about-portrait-panel,
+  #contact-portrait-panel,
+  #links-preview-panel {
+    height: clamp(240px, 72vw, 340px) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #about-bio-panel,
+  #contact-form-panel,
+  #links-directory-panel {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 18px !important;
+  }
+
+  #about-bio-panel {
+    min-height: 520px !important;
+  }
+
+  #links-preview-panel .network-directories-panel {
+    height: 100% !important;
+  }
+
+  #links-directory-panel > div:first-child > div:first-child {
+    position: static !important;
+    top: auto !important;
+    padding: 10px 0 !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     3. SECCIÓN WORKS: GRILLA PROLIJA DE BOTONES Y PANELES COLAPSABLES
+     -------------------------------------------------------------------------- */
+  #tab-works {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  #tab-works:not(.active) {
+    display: none !important;
+  }
+
+  /* Contenedor de las ventanas de la derecha (Pasan arriba y se centran) */
+  #tab-works > div.lg\:w-\[42\%\] {
+    order: 1 !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px !important;
+  }
+
+  /* Ventanas individuales */
+  #works-categories-window,
+  #works-list-window,
+  #works-info-window {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 14px !important;
+    width: 100% !important;
+  }
+
+  /* Ocultar triángulo feo por defecto de details */
+  #works-categories-window > summary::-webkit-details-marker,
+  #works-list-window > summary::-webkit-details-marker,
+  #works-info-window > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  #works-categories-window > summary,
+  #works-list-window > summary,
+  #works-info-window > summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* FIX CAPTURA: Grilla prolija y alineada para las categorías */
+  .categories-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+    gap: 6px !important;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .cat-pill {
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    padding: 8px 6px !important;
+    background: #000 !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-dim) !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease;
+  }
+
+  .cat-pill:hover,
+  .cat-pill.active {
+    border-color: var(--accent-orange) !important;
+    color: #fff !important;
+  }
+
+  .cat-pill.active {
+    background: rgba(255, 85, 0, 0.1) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 10px rgba(255, 85, 0, 0.18);
+  }
+
+  /* Listado de proyectos enumerados */
+  #project-list-container {
+    max-height: 240px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px !important;
+    padding-top: 4px;
+  }
+
+  #project-list-container > * {
+    margin-bottom: 0 !important;
+  }
+
+  /* Bloque inferior: Reproductor Canvas estirado y centrado */
+  #tab-works > div.lg\:w-\[58\%\] {
+    order: 2 !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    height: auto !important;
+    min-height: 520px !important;
+    padding: 14px !important;
+    margin-top: 12px;
+  }
+
+  #tab-works > div.lg\:w-\[58\%\] .w-full.flex-grow.my-3 {
+    min-height: 380px !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     4. SECCIÓN LINKS Y CONTACTO (AJUSTES MÓVIL)
+     -------------------------------------------------------------------------- */
+  .links-grid, 
+  #tab-links .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #terminal-form input,
+  #terminal-form textarea {
+    font-size: 13px !important;
+    padding: 8px 10px !important;
+  }
+}
+
+/* Dispositivos muy pequeños (< 360px) */
+@media screen and (max-width: 360px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

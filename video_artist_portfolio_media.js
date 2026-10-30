@@ -278,6 +278,7 @@ function loadProject(index) {
     const proj = filteredProjects[index];
     const projectInfoContainer = document.getElementById('project-info-container');
     const projectInfoContent = document.getElementById('project-info-content');
+    const projectInfoPlaceholder = document.getElementById('project-info-placeholder');
     const projectInfoGroups = Array.isArray(proj.projectInfo)
         ? proj.projectInfo.filter(group => Array.isArray(group) && group.length > 0)
         : [];
@@ -311,6 +312,7 @@ function loadProject(index) {
         projectInfoContent.appendChild(groupElement);
     });
     projectInfoContainer.classList.toggle('hidden', projectInfoGroups.length === 0);
+    projectInfoPlaceholder.classList.toggle('hidden', projectInfoGroups.length > 0);
 
     const metaLabel = document.getElementById('project-meta-label');
     const metaValue = document.getElementById('project-studio');

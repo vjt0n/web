@@ -27,6 +27,19 @@ function toggleWorksMenu(event) {
     button.setAttribute('aria-expanded', String(isOpen));
 }
 
+function handleWorksNavigation(event) {
+    event.stopPropagation();
+
+    if (window.matchMedia('(max-width: 768px), (orientation: portrait)').matches) {
+        event.preventDefault();
+        closeWorksMenu();
+        filterCategory('PANTALLAS / DISEÑO Y REALIZACIÓN');
+        return;
+    }
+
+    toggleWorksMenu(event);
+}
+
 function closeWorksMenu() {
     const menu = document.getElementById('works-category-menu');
     const button = document.getElementById('nav-works');
@@ -97,15 +110,17 @@ async function handleTerminalSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
     const nameInput = document.getElementById('cli-name');
+    const subjectInput = document.getElementById('cli-subject');
     const messageInput = document.getElementById('cli-message');
     const output = document.getElementById('cli-output');
     const submitButton = form.querySelector('button[type="submit"]');
     const name = nameInput.value.trim();
+    const subject = subjectInput.value.trim();
     const message = messageInput.value.trim();
 
     output.classList.remove('hidden');
-    if (!name || !message) {
-        output.textContent = '> ERROR: COMPLETÁ NOMBRE Y MENSAJE.';
+    if (!name || !subject || !message) {
+        output.textContent = '> ERROR: COMPLETÁ NOMBRE, ASUNTO Y MENSAJE.';
         return;
     }
 
@@ -113,27 +128,32 @@ async function handleTerminalSubmit(e) {
     output.textContent = '> PROCESANDO TRANSMISIÓN...';
 
     try {
-        const response = await fetch('https://formsubmit.co/ajax/tomaserio.multimedia@gmail.com', {
+        const response = await fetch('https://formspree.io/f/mgaalpel', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
+                name,
+                subject,
                 message,
-                _subject: `CONTACT WEB ${name}`
+                _subject: `CONTACT WEB ${name} - ${subject}`
             })
         });
         const result = await response.json();
 
-        if (!response.ok || (result.success !== true && result.success !== 'true')) {
-            throw new Error(result.message || 'FormSubmit rechazó el envío.');
+        if (!response.ok || result.ok !== true) {
+            const errorMessage = result.error
+                || result.errors?.map(error => error.message).join(' ')
+                || 'Formspree rechazó el envío.';
+            throw new Error(errorMessage);
         }
 
-        output.textContent = '> MENSAJE ENVIADO. GRACIAS POR CONTACTAR.\n> SI ES EL PRIMER ENVÍO, CONFIRMÁ EL EMAIL DE ACTIVACIÓN.';
+        output.textContent = '> MENSAJE ENVIADO. GRACIAS POR CONTACTAR.';
         form.reset();
     } catch (error) {
-        console.error('No se pudo enviar el mensaje de contacto:', error);
+        console.error('No se pudo enviar el mensaje de contacto con Formspree:', error);
         output.textContent = '> ERROR: NO SE PUDO ENVIAR EL MENSAJE. INTENTÁ NUEVAMENTE.';
     } finally {
         submitButton.disabled = false;

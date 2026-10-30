@@ -36,6 +36,8 @@
     </script>
 
     <link rel="stylesheet" href="video_artist_portfolio.css?v=2">
+
+    <link rel="stylesheet" href="video_artist_portfolio_mobile.css?v=1">
 </head>
 <body class="h-full bg-cyber-bg text-cyber-bright font-mono selection:bg-cyber-orange selection:text-black flex flex-col justify-between overflow-hidden relative">
 
@@ -68,10 +70,10 @@
 
                 <!-- WORKS Dropdown Navigation -->
                 <div class="relative dropdown-container inline-block">
-                    <button onclick="toggleWorksMenu(event)" id="nav-works" aria-expanded="false" aria-controls="works-category-menu" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
+                    <button onclick="handleWorksNavigation(event)" id="nav-works" aria-expanded="false" aria-controls="works-category-menu" class="nav-btn px-2 py-1 hover:text-cyber-orange transition-colors flex items-center space-x-1">
                         <span class="text-cyber-orange">♦</span>
                         <span>WORKS</span>
-                        <span class="text-xs text-cyber-orange ml-0.5">▼</span>
+                        <span class="nav-works-chevron text-xs text-cyber-orange ml-0.5">▼</span>
                     </button>
                     <!-- Dropdown Content -->
                     <div id="works-category-menu" class="dropdown-menu absolute right-0 mt-2 w-64 bg-cyber-card border border-cyber-border shadow-2xl py-2 z-50">
@@ -119,7 +121,7 @@
         <!-- ==================== 1. ABOUT ME TAB ==================== -->
         <section id="tab-about" class="tab-panel active w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
             <!-- Left Panel: Portrait Image with Hover Glow -->
-            <div class="w-full lg:w-1/2 flex justify-center items-center h-[350px] lg:h-[500px] relative group">
+            <div id="about-portrait-panel" class="w-full lg:w-1/2 flex justify-center items-center h-[350px] lg:h-[500px] relative group">
                 <button id="about-portrait-trigger" type="button" class="w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:border-cyber-orange group-hover:shadow-[0_0_18px_rgba(255,119,34,0.75)] focus:outline-none" aria-label="Ampliar retrato de Tomás Serio">
                     <img src="./pantallas/img/PROFILE SCREENSHOT.webp" alt="Tomás Serio (vj.t0n)" class="w-full h-full object-cover transition-all duration-300">
                 </button>
@@ -132,7 +134,7 @@
             </div>
 
             <!-- Right Panel: Biography with Language Switcher -->
-            <div class="w-full lg:w-1/2 h-[400px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto relative">
+            <div id="about-bio-panel" class="w-full lg:w-1/2 h-[400px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto relative">
                 <!-- Header Control inside Panel -->
                 <div class="flex justify-between items-center border-b border-cyber-border pb-3 mb-4">
                     <span class="text-xs text-cyber-orange font-bold tracking-widest">// BIOGRAPHY_DATA</span>
@@ -187,7 +189,7 @@
         <!-- ==================== 2. CONTACT TAB ==================== -->
         <section id="tab-contact" class="tab-panel w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
             <!-- Left Panel: Contact Image with Hover Glow -->
-            <div class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px] relative group">
+            <div id="contact-portrait-panel" class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px] relative group">
                 <button id="contact-portrait-trigger" type="button" class="w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:border-cyber-orange group-hover:shadow-[0_0_18px_rgba(255,119,34,0.75)] focus:outline-none" aria-label="Ampliar imagen de contacto">
                     <img src="./pantallas/img/ABOUT ME.webp" alt="Imagen de contacto" class="w-full h-full object-cover transition-all duration-300">
                 </button>
@@ -200,7 +202,7 @@
             </div>
 
             <!-- Right Panel: Direct Info & Interactive Terminal Form -->
-            <div class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
+            <div id="contact-form-panel" class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
                 <div>
                     <div class="text-xs text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-3 mb-6">
                         // DIRECT_COMMUNICATION
@@ -217,7 +219,13 @@
                                 [COPIAR]
                             </button>
                         </div>
-
+                        <a href="https://wa.me/5492323524648" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 border border-cyber-border bg-black hover:border-cyber-orange transition-colors">
+                            <span>
+                                <span class="text-[10px] text-cyber-dim block">WHATSAPP</span>
+                                <span class="text-sm md:text-base font-bold text-white">+54 9 2323 524648</span>
+                            </span>
+                            <span class="px-3 py-1 bg-cyber-border text-xs text-cyber-orange border border-cyber-orange">[CONTACTAR]</span>
+                        </a>
                     </div>
 
                     <!-- CLI Interactive Terminal Form -->
@@ -226,11 +234,15 @@
                         <form id="terminal-form" onsubmit="handleTerminalSubmit(event)" class="space-y-3">
                             <div>
                                 <label class="text-cyber-dim block mb-1">INPUT: NOMBRE ></label>
-                                <input type="text" id="cli-name" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange">
+                                <input type="text" id="cli-name" name="name" autocomplete="name" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange">
+                            </div>
+                            <div>
+                                <label class="text-cyber-dim block mb-1">INPUT: ASUNTO ></label>
+                                <input type="text" id="cli-subject" name="subject" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange">
                             </div>
                             <div>
                                 <label class="text-cyber-dim block mb-1">INPUT: MENSAJE ></label>
-                                <textarea id="cli-message" rows="2" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange"></textarea>
+                                <textarea id="cli-message" name="message" rows="5" required class="w-full bg-cyber-card border border-cyber-border px-2 py-1 text-white focus:outline-none focus:border-cyber-orange"></textarea>
                             </div>
                             <button type="submit" class="w-full py-2 bg-cyber-orange text-black font-bold uppercase hover:bg-white transition-colors">
                                 [ TRANSMITIR MENSAJE_ ]
@@ -246,7 +258,7 @@
         <!-- ==================== 3. LINKS TAB ==================== -->
         <section id="tab-links" class="tab-panel w-full h-full flex-col lg:flex-row gap-8 items-center justify-center">
             <!-- Left Panel: Dynamic Visual Preview Panel -->
-            <div class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px]">
+            <div id="links-preview-panel" class="w-full lg:w-1/2 flex justify-center items-center h-[300px] lg:h-[500px]">
                 <div class="network-directories-panel w-full h-full max-w-md border border-cyber-border bg-cyber-card relative overflow-hidden flex flex-col justify-between p-6 box-glow">
                     <div class="network-directory-dots" aria-hidden="true">
                         <svg class="network-directory-connections" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -287,7 +299,7 @@
             </div>
 
             <!-- Right Panel: Categorized Links List -->
-            <div class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
+            <div id="links-directory-panel" class="w-full lg:w-1/2 h-[450px] lg:h-[500px] border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between overflow-y-auto">
                 <div class="space-y-6">
                     <div class="text-xs text-cyber-orange font-bold tracking-widest sticky -top-6 z-30 py-4 px-5 bg-[#090909] border-b border-cyber-border shadow-[0_20px_36px_rgba(0,0,0,0.98)] box-border">
                         // DIRECTORY_NODES_&_SOCIAL_NETWORKS
@@ -436,37 +448,50 @@
                 </div>
             </div>
 
-            <!-- Right Island: Category Filter & Project List -->
-            <div class="w-full lg:w-[42%] h-[250px] lg:h-[500px] border border-cyber-border bg-cyber-card p-4 flex flex-col justify-between overflow-y-auto">
-                <div>
-                    <div class="whitespace-nowrap text-xs text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2 mb-3">
-                        // CATÁLOGO DE PROYECTOS
+            <!-- Right Island: Three independent, collapsible windows -->
+            <div class="w-full lg:w-[42%] h-auto lg:h-[500px] flex flex-col gap-4">
+                
+                <!-- Categories Window (collapsible, open by default) -->
+                <details id="works-categories-window" class="border border-cyber-border bg-cyber-card p-4 group" open>
+                    <summary class="list-none cursor-pointer text-[10px] text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2 mb-3 flex justify-between items-center select-none">
+                        <span>// CATEGORÍAS DEL CATÁLOGO</span>
+                        <span class="text-xs transition-transform duration-200 group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="categories-grid">
+                        <button data-category="PANTALLAS / DISEÑO Y REALIZACIÓN" onclick="filterCategory('PANTALLAS / DISEÑO Y REALIZACIÓN')" class="cat-pill">REALIZACIÓN</button>
+                        <button data-category="OPERACIÓN EN VIVO" onclick="filterCategory('OPERACIÓN EN VIVO')" class="cat-pill">OPERACIÓN EN VIVO</button>
+                        <button data-category="VIDEOINSTALACIÓN" onclick="filterCategory('VIDEOINSTALACIÓN')" class="cat-pill">VIDEOINSTALACIÓN</button>
+                        <button data-category="MOTION GRAPHICS" onclick="filterCategory('MOTION GRAPHICS')" class="cat-pill">MOTION GRAPHICS</button>
+                        <button data-category="LIVE SETS AV" onclick="filterCategory('LIVE SETS AV')" class="cat-pill">AV SETS</button>
+                        <button data-category="TEATRO" onclick="filterCategory('TEATRO')" class="cat-pill">TEATRO</button>
                     </div>
+                </details>
 
-                    <!-- Category Pills -->
-                    <div class="flex flex-wrap items-center gap-1 mb-4">
-                        <div class="flex flex-wrap items-center gap-1 border-l border-cyber-border pl-2 ml-1">
-                            <span id="catalog-screens-category" class="text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim">PANTALLAS</span>
-                            <button data-category="PANTALLAS / DISEÑO Y REALIZACIÓN" onclick="filterCategory('PANTALLAS / DISEÑO Y REALIZACIÓN')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">REALIZACIÓN</button>
-                            <button data-category="OPERACIÓN EN VIVO" onclick="filterCategory('OPERACIÓN EN VIVO')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">OPERACIÓN EN VIVO</button>
-                        </div>
-                        <button data-category="VIDEOINSTALACIÓN" onclick="filterCategory('VIDEOINSTALACIÓN')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">VIDEOINSTALACIÓN</button>
-                        <button data-category="MOTION GRAPHICS" onclick="filterCategory('MOTION GRAPHICS')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">MOTION GRAPHICS</button>
-                        <button data-category="LIVE SETS AV" onclick="filterCategory('LIVE SETS AV')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">AV SETS</button>
-                        <button data-category="TEATRO" onclick="filterCategory('TEATRO')" class="cat-pill whitespace-nowrap text-[10px] px-2 py-1 border border-cyber-border bg-black text-cyber-dim hover:text-white">TEATRO</button>
-                    </div>
-
-                    <!-- Project Selection List -->
-                    <div id="project-list-container" class="space-y-1.5 text-xs">
+                <!-- Selected Projects Window (collapsible, open by default) -->
+                <details id="works-list-window" class="border border-cyber-border bg-cyber-card p-4 group" open>
+                    <summary class="list-none cursor-pointer text-[10px] text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2 mb-3 flex justify-between items-center select-none">
+                        <span>// PROYECTOS SELECCIONADOS</span>
+                        <span class="text-xs transition-transform duration-200 group-open:rotate-180">▼</span>
+                    </summary>
+                    <div id="project-list-container" class="space-y-1.5 text-xs max-h-[220px] overflow-y-auto pt-1">
                         <!-- Populated dynamically via JS -->
                     </div>
-                    <div id="project-info-container" class="hidden mt-4 pt-3 border-t border-cyber-border">
-                        <div class="text-[10px] text-cyber-orange font-bold tracking-widest mb-2">
-                            // INFO DEL PROYECTO
-                        </div>
-                        <div id="project-info-content" class="space-y-3 text-[13px] leading-relaxed text-gray-300"></div>
+                </details>
+
+                <!-- Project Info Window (collapsible, open by default) -->
+                <details id="works-info-window" class="border border-cyber-border bg-cyber-card p-4 group" open>
+                    <summary class="list-none cursor-pointer text-[10px] text-cyber-orange font-bold tracking-widest border-b border-cyber-border pb-2 mb-2 flex justify-between items-center select-none">
+                        <span>// INFO DEL PROYECTO</span>
+                        <span class="text-xs transition-transform duration-200 group-open:rotate-180">▼</span>
+                    </summary>
+                    <div id="project-info-container" class="hidden pt-1">
+                        <div id="project-info-content" class="space-y-2 text-[13px] leading-relaxed text-gray-300"></div>
                     </div>
-                </div>
+                    <div id="project-info-placeholder" class="text-xs text-cyber-dim italic py-2">
+                        Selecciona un proyecto del catálogo para ver detalles técnicos.
+                    </div>
+                </details>
+
             </div>
 
         </section>
